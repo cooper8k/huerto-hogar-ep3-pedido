@@ -2,6 +2,8 @@ package com.huerto_hogar_e3.pedidos.model;
 
 import java.time.LocalDateTime;
 
+// No almacenar DTOs de otros servicios como columnas JPA
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
