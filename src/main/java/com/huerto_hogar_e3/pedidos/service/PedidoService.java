@@ -1,11 +1,14 @@
 package com.huerto_hogar_e3.pedidos.service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.huerto_hogar_e3.pedidos.client.UsuarioCliente;
+import com.huerto_hogar_e3.pedidos.dto.UsuarioDTO;
 import com.huerto_hogar_e3.pedidos.model.Pedido;
 import com.huerto_hogar_e3.pedidos.repository.PedidoRepository;
 
@@ -16,6 +19,9 @@ import jakarta.transaction.Transactional;
 public class PedidoService {
     @Autowired
     private PedidoRepository pedidoRepository;
+
+    @Autowired
+    private UsuarioCliente usuarioCliente;
 
     // listar pedidos
     public List<Pedido> pedidos(){
@@ -28,5 +34,23 @@ public class PedidoService {
             pedido.setFecha_pedido(LocalDateTime.now());
         }
         return pedidoRepository.save(pedido);
+    }
+
+
+    // para dto
+
+    public PedidoService(UsuarioCliente usuarioCliente) {
+        this.usuarioCliente = usuarioCliente;
+    }
+
+    public List<UsuarioDTO> obtenerTodosLosUsuarios() {
+        try {
+            List<UsuarioDTO> usuarios = usuarioCliente.obtenerUsuarios();
+            return usuarios != null ? usuarios : Collections.emptyList();
+        } catch (feign.FeignException e) {
+            return Collections.emptyList();
+        } catch (Exception e) {
+            return Collections.emptyList();
+        }
     }
 }

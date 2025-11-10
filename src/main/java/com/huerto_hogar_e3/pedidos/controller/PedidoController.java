@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.huerto_hogar_e3.pedidos.dto.UsuarioDTO;
 import com.huerto_hogar_e3.pedidos.model.Pedido;
 import com.huerto_hogar_e3.pedidos.service.PedidoService;
 
@@ -25,6 +26,7 @@ public class PedidoController {
 
     @Autowired
     private PedidoService pedidoService;
+
 
     @GetMapping("/listar")
     public ResponseEntity<List<Pedido>> listar(){
@@ -42,5 +44,18 @@ public class PedidoController {
     public ResponseEntity<Pedido> guardarPedido(@RequestBody Pedido pedido){
         Pedido nuevPedido = pedidoService.agregarPedido(pedido);
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevPedido);
+    }
+
+
+    // para dto
+
+    public PedidoController(PedidoService pedidoService){
+        this.pedidoService=pedidoService;
+    }
+
+    @GetMapping("/usuarios")
+    public ResponseEntity<List<UsuarioDTO>> obtenerLosUsuarios(){
+        List<UsuarioDTO> usuarios = pedidoService.obtenerTodosLosUsuarios();
+        return ResponseEntity.ok().body(usuarios);
     }
 }
