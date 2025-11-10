@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.huerto_hogar_e3.pedidos.dto.UsuarioDTO;
 import com.huerto_hogar_e3.pedidos.model.Pedido;
-import com.huerto_hogar_e3.pedidos.dto.PedidoDto;
 import com.huerto_hogar_e3.pedidos.service.PedidoService;
 
 import org.springframework.web.bind.annotation.RequestBody;
