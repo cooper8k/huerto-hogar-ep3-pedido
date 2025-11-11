@@ -35,7 +35,7 @@ public class Pedido {
     @Column(name = "usuario_id", nullable = true)
     private Integer usuarioId;
 
-    @Column(name = "carrito_id", nullable = true)
-    private Integer carritoId;
+    @Column(name = "idProducto", nullable = true)
+    private Integer idProducto;
     
 }

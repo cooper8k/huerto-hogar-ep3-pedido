@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.huerto_hogar_e3.pedidos.dto.ProductoDTO;
 import com.huerto_hogar_e3.pedidos.dto.UsuarioDTO;
 import com.huerto_hogar_e3.pedidos.model.Pedido;
 import com.huerto_hogar_e3.pedidos.service.PedidoService;
@@ -47,11 +48,7 @@ public class PedidoController {
     }
 
 
-    // para dto
-
-    public PedidoController(PedidoService pedidoService){
-        this.pedidoService=pedidoService;
-    }
+    // para dto usuario
 
     @GetMapping("/usuarios")
     public ResponseEntity<List<UsuarioDTO>> obtenerLosUsuarios(){
@@ -59,9 +56,12 @@ public class PedidoController {
         return ResponseEntity.ok().body(usuarios);
     }
 
-    
+    //
+    @GetMapping("/productos")
+    public ResponseEntity<List<ProductoDTO>> obtenerProductos(){
+        List<ProductoDTO> productos = pedidoService.obtenerTodosLosProductos();
 
-    
-
+        return ResponseEntity.ok().body(productos);
+    }
     
 }

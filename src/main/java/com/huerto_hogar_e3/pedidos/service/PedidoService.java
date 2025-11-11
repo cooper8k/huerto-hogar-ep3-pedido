@@ -11,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.huerto_hogar_e3.pedidos.client.ProductoCliente;
 import com.huerto_hogar_e3.pedidos.client.UsuarioCliente;
+import com.huerto_hogar_e3.pedidos.dto.ProductoDTO;
 import com.huerto_hogar_e3.pedidos.dto.UsuarioDTO;
 import com.huerto_hogar_e3.pedidos.model.Pedido;
 import com.huerto_hogar_e3.pedidos.repository.PedidoRepository;
@@ -27,33 +29,27 @@ public class PedidoService {
     @Autowired
     private UsuarioCliente usuarioCliente;
 
+    @Autowired ProductoCliente productoCliente;
+
     // listar pedidos
     public List<Pedido> pedidos(){
         return pedidoRepository.listaPedidos();
     }
 
-   
 
-
-    // para dto
-
-    public PedidoService(UsuarioCliente usuarioCliente) {
-        this.usuarioCliente = usuarioCliente;
-    }
-
-    // validar si usuarios existen en el servicio de usuarios
-    public boolean validarUsuariosExistentes(List<Integer> usuarioIds) {
-        List<UsuarioDTO> usuarios = obtenerTodosLosUsuarios();
-        for (Integer id : usuarioIds) {
-            boolean exists = usuarios.stream()
-                    .anyMatch(u -> Objects.equals(u.getId_usuario(), id));
-            if (!exists) {
-                return false;
-            }
+    // obtener los productos
+    public List<ProductoDTO> obtenerTodosLosProductos() {
+        try {
+            List<ProductoDTO> prodcutos = productoCliente.obtenerProductos();
+            return prodcutos != null ? prodcutos : Collections.emptyList();
+        } catch (feign.FeignException e) {
+            return Collections.emptyList();
+        } catch (Exception e) {
+            return Collections.emptyList();
         }
-        return true;
     }
 
+    // obtener usuarios
 
     public List<UsuarioDTO> obtenerTodosLosUsuarios() {
         try {
@@ -76,6 +72,17 @@ public class PedidoService {
                 .orElse(null);
     }
    
+    // obtener productoDto por id
+    public ProductoDTO obtenerProductoPorId(Integer id) {
+        if (id == null) return null;
+        List<ProductoDTO> productos = obtenerTodosLosProductos();
+        return productos.stream()
+                .filter(u -> Objects.equals(u.getIdProducto(), id))
+                .findFirst()
+                .orElse(null);
+    }
+
+
      public Pedido agregarPedido(Pedido pedido){
         // Si no llega fecha_pedido, establecer la fecha actual para evitar violación NOT NULL
         if (pedido.getFecha_pedido() == null) {
@@ -90,9 +97,20 @@ public class PedidoService {
            if (usuario == null) {
                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "usuario con id " + usuarioId + " no existe");
            }
-
            // Guardamos solo el id en la entidad; si necesitas datos del usuario los puedes usar en la lógica
            pedido.setUsuarioId(usuario.getId_usuario());
+
+           // valida si existe un producto
+           if(pedido.getIdProducto()==null){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"producto.id es requerido");
+           }
+           Integer productoId = pedido.getIdProducto();
+           ProductoDTO producto = obtenerProductoPorId(productoId);
+           if (producto ==null) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"producto con id " + productoId + " no existe");
+           }
+           pedido.setIdProducto(producto.getIdProducto());
+
         return pedidoRepository.save(pedido);
     }
 }
