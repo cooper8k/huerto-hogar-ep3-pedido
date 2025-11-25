@@ -38,10 +38,11 @@ public class PedidoController {
 
     // listar pedidos
     @GetMapping("/listar")
-    @Operation(summary = "Lista de Pedidos",description = "Obtiene una lista de pedidos relaizados")
+    @Operation(summary = "Lista de Pedidos",description = "Obtiene una lista de pedidos realizados")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200",description = "Lista todos los pedidos correctamente",content = @Content(mediaType = "application/josn",array = @ArraySchema(schema = @Schema(implementation = Pedido.class)))),
-        @ApiResponse(responseCode = "204", description = "no se econtraron pedidos"),
+        @ApiResponse(responseCode = "200",description = "Lista todos los pedidos correctamente",
+        content = @Content(mediaType = "application/json",array = @ArraySchema(schema = @Schema(implementation = Pedido.class)))),
+        @ApiResponse(responseCode = "204", description = "No se encontraron pedidos"),
         @ApiResponse(responseCode = "500",description = "Error interno del servidor")
     })
     public ResponseEntity<List<Pedido>> listar(){

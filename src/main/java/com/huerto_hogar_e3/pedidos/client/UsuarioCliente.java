@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.huerto_hogar_e3.pedidos.dto.UsuarioDTO;
 
 
-@FeignClient(name = "usuarios",url = "http://localhost:8089/api/v1/usuario")
+@FeignClient(name = "usuarios",url = "http://52.1.232.64:8089/api/v1/usuario")
 public interface UsuarioCliente {
     
     @GetMapping("/listar")
